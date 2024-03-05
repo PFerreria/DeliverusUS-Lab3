@@ -41,7 +41,7 @@ const update = [
   }).withMessage('Please upload an image with format (jpeg, png).'),
   check('logo').custom((value, { req }) => {
     return checkFileMaxSize(req, 'logo', maxFileSize)
-  }).withMessage('Maximum file size of ' + maxFileSize / 1000000 + 'MB')
+  }).withMessage('Maximum file size of ' + maxFileSize / 1000000 + 'MB'),
   check('address').exists().isString().trim(),
   check('postalCode').exists().isString().trim(),
   check('url').optional({ nullable: true, checkFalsy: true }).isString().trim(),
