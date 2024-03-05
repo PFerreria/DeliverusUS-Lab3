@@ -5,33 +5,61 @@ import RestaurantController from '../controllers/RestaurantController.js'
 const loadFileRoutes = function (app) {
   app.route('/restaurants')
     .get(
+      isLoggedIn,
+      hasRole('customer'),
       RestaurantController.index)
     .post(
-    // TODO: Add needed middlewares
+      isLoggedIn,
+      hasRole('owner'),
+      handleFilesUpload(['heroImage'], process.env.RESTAURANTS_FOLDER),
+      handleFilesUpload(['logo'], process.env.RESTAURANTS_FOLDER),
+      RestaurantValidation.create,
+      handleValidation,
+      RestaurantMiddleware.checkRestaurantOwnership,
       RestaurantController.create)
 
   app.route('/restaurants/:restaurantId')
-    .get(RestaurantController.show)
+    .get(
+      isLoggedIn,
+      hasRole('owner'),
+      RestaurantMiddleware.checkRestaurantOwnership,
+      RestaurantController.show)
     .put(
-    // TODO: Add needed middlewares
+      isLoggedIn,
+      hasRole('owner'),
+      handleFilesUpload(['heroImage'], process.env.RESTAURANTS_FOLDER),
+      handleFilesUpload(['logo'], process.env.RESTAURANTS_FOLDER),
+      RestaurantValidation.create,
+      handleValidation,
+      RestaurantMiddleware.checkRestaurantOwnership,
       RestaurantController.update)
     .delete(
-    // TODO: Add needed middlewares
+      isLoggedIn,
+      hasRole('owner'),
+      handleFilesUpload(['heroImage'], process.env.RESTAURANTS_FOLDER),
+      handleFilesUpload(['logo'], process.env.RESTAURANTS_FOLDER),
+      RestaurantValidation.create,
+      handleValidation,
+      RestaurantMiddleware.checkRestaurantOwnership,
       RestaurantController.destroy)
 
   app.route('/restaurants/:restaurantId/orders')
     .get(
-    // TODO: Add needed middlewares
+      isLoggedIn,
+      hasRole('owner'),
+      RestaurantMiddleware.checkRestaurantOwnership,
       OrderController.indexRestaurant)
 
   app.route('/restaurants/:restaurantId/products')
     .get(
-    // TODO: Add needed middlewares
+      isLoggedIn,
+      hasRole('customer'),
       ProductController.indexRestaurant)
 
   app.route('/restaurants/:restaurantId/analytics')
     .get(
-    // TODO: Add needed middlewares
+      isLoggedIn,
+      hasRole('customer'),
       OrderController.analytics)
 }
 export default loadFileRoutes
